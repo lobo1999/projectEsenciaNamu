@@ -16,7 +16,7 @@ const About = () => {
                             debido a su imponencia física. <br/>
                             El objetivo de este proyecto es incentivar el turismo nacional e internacional, 
                             mostrando las bellezas turísticas con las que cuenta el territorio nacional, brindando
-                            información general de estos lugares y mostrando fotografías de la mano de  
+                            información general de estos lugares y mostrando fotografías de la mano de 
                             <Link to="/photographers">nuestro equipo fotográfico</Link>.
                         </p>    
                     </div>
