@@ -1,17 +1,23 @@
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {GoogleMap, useLoadScript, Marker, InfoWindow} from "@react-google-maps/api";
 import Slider from "react-slick";
 
 const cr = {lat: 9.8084883, lng: -84.281068};
+const API_URL = "https://api.unsplash.com/photos/?client_id=m2vzQnSBpOgGwMldmxiALVYBGuEgyW4uswPUxpBpjvA";
+let places = [];
+
 
 export default function Map() {
+    
     const { isLoaded } = useLoadScript ({
         googleMapsApiKey: "",
     });
+
     if(!isLoaded) return <NoLoaded/>;
     return <GoMap/>
+
 }
 
 function NoLoaded() {
@@ -23,12 +29,14 @@ function NoLoaded() {
 
 function GoMap() {
     const [selectedPlace, setSelectedPlace] = useState(null);
-
+    const [mapInstance, setMapInstance] = useState(null);
     let marker3 = {lat: 9.6528243, lng: -82.7423077, key: 1};
     let marker1 = {lat: 9.5700453, lng: -84.5993987, key: 2};
     let marker2 = {lat: 9.6909023, lng: -85.2051687, key: 3};
     let locations = [marker3, marker1, marker2];
-    
+
+    places = GET();
+
     return(
 
         <GoogleMap
@@ -40,9 +48,20 @@ function GoMap() {
             zoom={8}
             center={cr} 
             mapContainerClassName="mapContainer"
+            onLoad={(map) => setTimeout(() => setMapInstance(map))}
         >
-            <Marker></Marker>
-            {locations.map(place => (
+            {/* 
+                {mapInstance && places && places.map(places => (
+                    key={place.key} 
+                    position={{
+                        lat: place.lat, lng: place.lng
+                    }}
+                    onClick={() => {
+                        setSelectedPlace(place);
+                    }}
+                />))} 
+            */} 
+            {mapInstance && (locations.map(place => (
                 <Marker
                     key={place.key} 
                     position={{
@@ -52,7 +71,8 @@ function GoMap() {
                         setSelectedPlace(place);
                     }}
                 />
-            ))}
+            )))}
+
             {selectedPlace && (
                 <InfoWindow 
                     position={{
@@ -81,41 +101,43 @@ function GoMap() {
     )
 }
 
-const ApiLoad = () => {
-    const [APIstate, setAPIstate] = useState({
-        loading: false,
-        repos: null
-    });
-    let state = {photos: []};
+const GET = () => {
+
+    const[array, setArray] = useState([]);
+
+    useEffect( () => {
+        
+        const getApi = async () => {
+            const response = await fetch(API_URL);
+            const jsonResponse = await response.json();
+            setArray(jsonResponse);
+        }
+        
+        getApi();
+
+    }, []);
+
+    return array;
 }
 
+
+
 const CarouselLoad = () => {
+
     const infiniteTrue = true;
     const speed = 700;
     const slidesToScroll = 1;
     const slidesToShow = 3;
-    const [animation, setAnimation] = useState(undefined);
-    const [autoplay, setAutoplay] = useState(false);
-    const [cellAlign, setCellAlign] = useState("left");
-    const [cellSpacing, setCellSpacing] = useState(0);
-    const [heightMode, setHeightMode] = useState("max");
-    const [scrollMode, setScrollMode] = useState("remainder");
-    const [slideIndex, setSlideIndex] = useState(0);
-    const [transitionMode, setTransitionMode] = useState("scroll");
-    const [underlineHeader, setUnderlineHeader] = useState(false);
-    
+
     return (
         <Slider
         infinite={infiniteTrue}
         speed={speed}
         slidesToShow={slidesToShow}
         slidesToScroll={slidesToScroll}>
-            <img src="https://via.placeholder.com/400/13b2a8/c0392b/&text=slide1" />         
-            <img src="https://via.placeholder.com/400/13b2a8/c0392b/&text=slide2" />         
-            <img src="https://via.placeholder.com/400/13b2a8/c0392b/&text=slide3" />         
-            <img src="https://via.placeholder.com/400/13b2a8/c0392b/&text=slide4" />         
-            <img src="https://via.placeholder.com/400/13b2a8/c0392b/&text=slide5" />         
-            <img src="https://via.placeholder.com/400/13b2a8/c0392b/&text=slide6" />                     
+            {Array.from(places).map(p => (
+                <img src={p.urls.regular} />
+            ))}                
         </Slider>
     )
 }

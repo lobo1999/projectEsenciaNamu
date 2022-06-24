@@ -220,10 +220,11 @@
   border-radius: 0;
   border-top: none;
   border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
 }
 
 .icon-namu {
-  content: url(../assets/Namu.svg);
+  content: url(../assets/Namu.png);
   height: 5em;
 }
 
@@ -532,4 +533,17 @@
   .menu {
     display: block;
   }
+}
+
+@media (min-width: 1600px) {
+  .hamburger {
+    display: none;
+  }
+  .menu {
+    display: block;
+  }
+  *{
+    font-size: 30px;
+  }
+
 }
