@@ -12,7 +12,7 @@ let places = [];
 export default function Map() {
     
     const { isLoaded } = useLoadScript ({
-        googleMapsApiKey: "",
+        googleMapsApiKey: "AIzaSyAHvYObiEXhY8VTbWGNGDkZahQozhsne70",
     });
 
     if(!isLoaded) return <NoLoaded/>;
