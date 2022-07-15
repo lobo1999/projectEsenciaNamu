@@ -4,6 +4,7 @@ import About from "./components/about/About";
 import Photographers from "./components/about/Photographers";
 import Destinations from "./components/destinations/Destinations";
 import Profile from "./components/about/Profile";
+import Gallery from "./components/about/Gallery"; 
 import Map from "./components/destinations/Map";
 import "./styles/index.css";
 import "./styles/styles.css";
@@ -19,6 +20,7 @@ function App() {
         <Route path="/destinations" element={<Destinations />}/>
         <Route path="/profile" element={<Profile />}/>
         <Route path="/destinations" element={<Map />}/>
+        <Route path="/gallery" element={<Gallery />}/>
       </Routes>
     </BrowserRouter>      
   );
