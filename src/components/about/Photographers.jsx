@@ -19,7 +19,7 @@ const Photographers = () => {
                 </Link>
             </div>
             <div className="photographer_card pc-r pc-u text--center flex--center">
-                <Link to="/">
+                <Link to="/profile">
                     <h3>Nombre Apellido</h3>
                     <span>Fotográfo</span>
                 </Link>
