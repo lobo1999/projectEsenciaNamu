@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import {GoogleMap, useLoadScript, Marker, InfoWindow} from "@react-google-maps/api";
 import Slider from "react-slick";
 
-const cr = {lat: 9.8084883, lng: -84.281068};
+const COSTA_RICA = {lat: 9.8084883, lng: -84.281068};
 const API_URL = "https://api.unsplash.com/photos/?client_id=m2vzQnSBpOgGwMldmxiALVYBGuEgyW4uswPUxpBpjvA";
 let places = [];
 
@@ -12,7 +12,7 @@ let places = [];
 export default function Map() {
     
     const { isLoaded } = useLoadScript ({
-        googleMapsApiKey: "",
+        googleMapsApiKey: "AIzaSyAHvYObiEXhY8VTbWGNGDkZahQozhsne70",
     });
 
     if(!isLoaded) return <NoLoaded/>;
@@ -30,6 +30,12 @@ function NoLoaded() {
 function GoMap() {
     const [selectedPlace, setSelectedPlace] = useState(null);
     const [mapInstance, setMapInstance] = useState(null);
+    const RESTRICTS = {
+        north: 11.36,
+        south: 57.74,
+        west: 48.50,
+        east: -10.08
+    }
     let marker3 = {lat: 9.6528243, lng: -82.7423077, key: 1};
     let marker1 = {lat: 9.5700453, lng: -84.5993987, key: 2};
     let marker2 = {lat: 9.6909023, lng: -85.2051687, key: 3};
@@ -41,12 +47,16 @@ function GoMap() {
 
         <GoogleMap
             options={{
-                streetViewControl:false,
                 fullscreenControl:false,
-                mapTypeControl:false
+                mapTypeControl:false,
+                maxZoom:14,
+                minZoom:7,
+                restriction:{ latLngBounds: RESTRICTS,
+                              strictBounds:false},
+                streetViewControl:false
             }}
             zoom={8}
-            center={cr} 
+            center={COSTA_RICA} 
             mapContainerClassName="mapContainer"
             onLoad={(map) => setTimeout(() => setMapInstance(map))}
         >
@@ -119,8 +129,6 @@ const GET = () => {
 
     return array;
 }
-
-
 
 const CarouselLoad = () => {
 
