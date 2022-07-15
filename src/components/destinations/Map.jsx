@@ -126,7 +126,7 @@ const GET = () => {
         getApi();
 
     }, []);
-
+    console.log(array);
     return array;
 }
 
