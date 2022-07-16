@@ -21,7 +21,6 @@ function App() {
         <Route path="/destinations" element={<Map />}/>
         <Route path="/gallery" element={<Gallery />}/> 
       </Routes>
-     <Footer/>
     </BrowserRouter> 
      
   );

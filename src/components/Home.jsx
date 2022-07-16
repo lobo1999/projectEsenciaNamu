@@ -1,11 +1,12 @@
 import React from "react";
-
+import Footer from "./Footer";
 
 
 
 const Home = () => {
   var url = "https://images.unsplash.com/photo-1616128417743-c3a6992a65e7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=872&q=80";
   return (
+    <>
     <div className="mainContent glass">
       <div className="mainContent__about glass blur">
         <h1 className="mainContent__h1">
@@ -18,7 +19,9 @@ const Home = () => {
       <div className="mainContentHolder__img glass blur">
         <img className="mainContent__img" src={url}></img>
       </div>
-    </div>
+      </div>
+      <Footer/>
+    </>    
   );
 };
 
