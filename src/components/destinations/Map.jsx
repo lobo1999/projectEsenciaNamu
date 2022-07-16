@@ -5,8 +5,12 @@ import {GoogleMap, useLoadScript, Marker, InfoWindow} from "@react-google-maps/a
 import Slider from "react-slick";
 
 const COSTA_RICA = {lat: 9.8084883, lng: -84.281068};
-const API_URL = "https://api.unsplash.com/photos/?client_id=m2vzQnSBpOgGwMldmxiALVYBGuEgyW4uswPUxpBpjvA";
-let places = [];
+const API_PLACES = "https://namu-app-backend.herokuapp.com/api/places";
+const API_COORDINATES = "https://namu-app-backend.herokuapp.com/api/coordinates";
+const API_PLACESPHOTOS = "https://namu-app-backend.herokuapp.com/image";
+var places = [];
+var coordinates = [];
+var photos = [];
 
 
 export default function Map() {
@@ -26,22 +30,73 @@ function NoLoaded() {
     )
 }
 
+const GET_PLACES = () => {
+
+    const[array, setArray] = useState([]);
+
+    useEffect( () => {
+        
+        const getApi = async () => {
+            const response = await fetch(API_PLACES);
+            const jsonResponse = await response.json();
+            setArray(jsonResponse);
+        }
+        
+        getApi();
+
+    }, []);
+    
+    return array;
+}
+
+const GET_COORDINATES = () => {
+
+    const[array, setArray] = useState([]);
+
+    useEffect( () => {
+        
+        const getApi = async () => {
+            const response = await fetch(API_COORDINATES);
+            const jsonResponse = await response.json();
+            setArray(jsonResponse);
+        }
+        
+        getApi();
+
+    }, []);
+    return array;
+}
+
+const GET_PHOTOS = (id) => {
+
+    const[array, setArray] = useState(null);
+
+    const getApi = async () => {
+
+        const response = await fetch(`${API_PLACESPHOTOS}/${id}`);
+        const imgBlob = await response.blob();
+        const reader = new FileReader();
+        reader.readAsDataURL(imgBlob);
+        reader.onloadend = () => {
+            const base64data = reader.result;
+            setArray(base64data);
+        }
+
+    }
+    
+    getApi();
+
+    return array;
+}
 
 function GoMap() {
-    const [selectedPlace, setSelectedPlace] = useState(null);
-    const [mapInstance, setMapInstance] = useState(null);
-    const RESTRICTS = {
-        north: 11.36,
-        south: 57.74,
-        west: 48.50,
-        east: -10.08
-    }
-    let marker3 = {lat: 9.6528243, lng: -82.7423077, key: 1};
-    let marker1 = {lat: 9.5700453, lng: -84.5993987, key: 2};
-    let marker2 = {lat: 9.6909023, lng: -85.2051687, key: 3};
-    let locations = [marker3, marker1, marker2];
 
-    places = GET();
+    const [selectedPlace, setSelectedPlace] = useState(null);
+    const [selectedCoords, setSelectedCoords] = useState(null)
+    const [mapInstance, setMapInstance] = useState(null);
+    places = GET_PLACES();
+    coordinates = GET_COORDINATES();
+    var placeAtCord = null;
 
     return(
 
@@ -51,8 +106,6 @@ function GoMap() {
                 mapTypeControl:false,
                 maxZoom:14,
                 minZoom:7,
-                restriction:{ latLngBounds: RESTRICTS,
-                              strictBounds:false},
                 streetViewControl:false
             }}
             zoom={8}
@@ -60,47 +113,47 @@ function GoMap() {
             mapContainerClassName="mapContainer"
             onLoad={(map) => setTimeout(() => setMapInstance(map))}
         >
-            {/* 
-                {mapInstance && places && places.map(places => (
-                    key={place.key} 
-                    position={{
-                        lat: place.lat, lng: place.lng
-                    }}
-                    onClick={() => {
-                        setSelectedPlace(place);
-                    }}
-                />))} 
-            */} 
-            {mapInstance && (locations.map(place => (
+
+            {mapInstance && (places.map(place => (
+                placeAtCord = coordinates.find(c => c.id === place.idCoordinate),
                 <Marker
-                    key={place.key} 
+                    key={place.id} 
                     position={{
-                        lat: place.lat, lng: place.lng
+                        lat: Number(placeAtCord.latitude), 
+                        lng: Number(placeAtCord.longitude)
                     }}
                     onClick={() => {
                         setSelectedPlace(place);
+                        setSelectedCoords(placeAtCord);
                     }}
                 />
             )))}
-
+            
             {selectedPlace && (
+                
                 <InfoWindow 
                     position={{
-                        lat: selectedPlace.lat,
-                        lng: selectedPlace.lng
+                        lat: Number(selectedCoords.latitude),
+                        lng: Number(selectedCoords.longitude)
                     }}
                     onCloseClick={() => {
                         setSelectedPlace(null);
+                        setSelectedCoords(null);
                     }}
                 >
                     
                     <div className="place__container">
                         <div className="place__info">
-                            <h3>Nombre del lugar</h3>
-                            <p className>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi non quidem, culpa temporibus rerum placeat odit. Deleniti est, dolorum rerum, tenetur tempora incidunt modi recusandae quae esse consequatur eius temporibus quibusdam odio nemo voluptas laborum fugiat excepturi illum minus distinctio.</p>
+                            <h3>{selectedPlace.name}</h3>
+                            <p className="place__description">{selectedPlace.description}</p>
+                            <hr/>
+                            <p className="place__extra">
+                                Horario: {selectedPlace.schedule}
+                                <br/>
+                                Precio: {selectedPlace.priceEntry}
+                            </p>
                         </div>
                         <div className="place__carousel">
-                            <CarouselLoad/>
                         </div>
                     </div>
                 </InfoWindow>
@@ -111,26 +164,8 @@ function GoMap() {
     )
 }
 
-const GET = () => {
 
-    const[array, setArray] = useState([]);
-
-    useEffect( () => {
-        
-        const getApi = async () => {
-            const response = await fetch(API_URL);
-            const jsonResponse = await response.json();
-            setArray(jsonResponse);
-        }
-        
-        getApi();
-
-    }, []);
-    console.log(array);
-    return array;
-}
-
-const CarouselLoad = () => {
+const CarouselLoad = (photos) => {
 
     const infiniteTrue = true;
     const speed = 700;
@@ -143,8 +178,8 @@ const CarouselLoad = () => {
         speed={speed}
         slidesToShow={slidesToShow}
         slidesToScroll={slidesToScroll}>
-            {Array.from(places).map(p => (
-                <img src={p.urls.regular} />
+            {Array.from(photos).map(p => (
+                <img src={p.image} />
             ))}                
         </Slider>
     )

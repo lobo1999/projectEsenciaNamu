@@ -26,8 +26,9 @@ const Navbar = () => {
           <span><i className="icon-namu"></i></span>
         </NavLink>
         <div className="menu">
-          <NavLink id="" to="/destinations" onClick={destWindow}>Destinos</NavLink>
-          <NavLink id="about" to="/about" onClick={clickWindow}>Quiénes Somos</NavLink>
+          <NavLink to="/destinations" onClick={destWindow}>Destinos</NavLink>
+          <NavLink to="/photographers" onClick={clickWindow}>Colaboradores</NavLink>
+          <NavLink to="/about" onClick={clickWindow}>Quiénes Somos</NavLink>
         </div>
         <button className="hamburger">
           <span></span>

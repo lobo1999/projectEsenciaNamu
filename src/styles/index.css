@@ -369,6 +369,15 @@
   font-size: 0.875rem;
 }
 
+.place__extra {
+  font-size: 0.875rem !important;
+  font-weight: bold;
+}
+
+.place__description {
+  font-size: 1.0125rem !important;
+}
+
 .photograpers {
   height: 77vh;
   margin-top: 2em;
@@ -387,6 +396,10 @@
 
 .photographer_card_a {
   width: 100%;
+  height: 15em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .pc-u {
@@ -560,7 +573,7 @@
   }
 }
 
-@import "~react-image-gallery/styles/css/image-gallery.css";
+
 
 .mainContainer{
 display:flex;
