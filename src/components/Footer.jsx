@@ -1,9 +1,13 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <div>
-      <div>Soy el footer jeje</div>
+      <div className="mainFooter glass">
+      <span><i className="icon-namuF"></i></span>
+      <p className="copyright">© Todos los derechos reservados a Resonancia Gaia 2022</p>
+      <span><i className="icon-rgF"></i></span>
+    </div>
     </div>
   );
 };

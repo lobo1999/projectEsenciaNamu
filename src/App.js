@@ -19,9 +19,11 @@ function App() {
         <Route path="/photographers" element={<Photographers />} />
         <Route path="/profile" element={<Profile />}/>
         <Route path="/destinations" element={<Map />}/>
-        <Route path="/gallery" element={<Gallery />}/>
+        <Route path="/gallery" element={<Gallery />}/> 
       </Routes>
-    </BrowserRouter>      
+     <Footer/>
+    </BrowserRouter> 
+     
   );
 }
 
