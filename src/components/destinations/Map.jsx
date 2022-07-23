@@ -7,11 +7,11 @@ import Slider from "react-slick";
 const COSTA_RICA = {lat: 9.8084883, lng: -84.281068};
 const API_PLACES = "https://namu-app-backend.herokuapp.com/api/places";
 const API_COORDINATES = "https://namu-app-backend.herokuapp.com/api/coordinates";
-const API_PLACESPHOTOS = "https://namu-app-backend.herokuapp.com/api/image";
+const API_PLACESPHOTOS = "https://namu-app-backend.herokuapp.com/api/images";
 var places = [];
 var coordinates = [];
 var photosPlaces = [];
-
+var allPhotos = [];
 
 export default function Map() {
     
@@ -42,7 +42,9 @@ const GET_PLACES = () => {
     }
 
     useEffect( () => {
+
             getApi();
+            
     }, []);
 
     return array;
@@ -58,26 +60,46 @@ const GET_COORDINATES = () => {
         setArray(jsonResponse);
     }
 
-    useEffect( () => {    
+    useEffect( () => {
 
         getApi();
 
-    },[]);
+    }, []);
 
     return array;
 }
 
-const GET_PHOTOS = (id) => {
-
+const GET_PHOTOS = async (id) => {
     
-    const getApi = async () => {
-        
+    const getApi = async () => {  
         const response = await fetch(`${API_PLACESPHOTOS}/${id}`);
         const jsonResponse = await response.json();
         photosPlaces = jsonResponse;
+        console.log("-------API------");
+        console.log(photosPlaces);
     }
     
     getApi();
+}
+
+const ALL_PHOTOS = () => {
+    
+    const[array, setArray] = useState([]);
+
+    const getApi = async () => {
+        const response = await fetch(API_PLACESPHOTOS);
+        const jsonResponse = await response.json();
+        setArray(jsonResponse);
+    }
+
+    useEffect( () => {
+
+        getApi();
+
+    }, []);
+
+    return array;
+
 }
 
 function GoMap() {
@@ -88,7 +110,7 @@ function GoMap() {
 
     places = GET_PLACES();
     coordinates = GET_COORDINATES();
-    
+    allPhotos = ALL_PHOTOS();
     var placeAtCord = null;
 
     return(
@@ -108,7 +130,7 @@ function GoMap() {
         >
 
             {mapInstance && (places.map(place => (
-                placeAtCord = coordinates.find(c => c.id === place.idCoordinate),
+                placeAtCord = coordinates.find(c => c.id === place.idCoordinate), 
                 <Marker
                     key={place.id} 
                     position={{
@@ -119,12 +141,19 @@ function GoMap() {
                         placeAtCord = coordinates.find(c => c.id === place.idCoordinate);
                         setSelectedCoords(placeAtCord);
                         setSelectedPlace(place);
+                        if(photosPlaces.length > 0) {
+                            photosPlaces = [];
+                        }
                     }}
                 />
             )))}
-            
-            {selectedCoords && selectedPlace &&  (
-                GET_PHOTOS(selectedPlace.id),
+
+            {selectedPlace && (
+                Array.from(allPhotos).forEach(ph => {
+                    if(ph.idPlace === selectedPlace.id)
+                        photosPlaces.push(ph);
+                }),
+                console.log(photosPlaces),
                 <InfoWindow 
                     position={{
                         lat: Number(selectedCoords.latitude),
@@ -133,6 +162,7 @@ function GoMap() {
                     onCloseClick={() => {
                         setSelectedCoords(null);
                         setSelectedPlace(null);
+                        photosPlaces = [];
                     }}
                 >
                     
