@@ -7,10 +7,10 @@ import Slider from "react-slick";
 const COSTA_RICA = {lat: 9.8084883, lng: -84.281068};
 const API_PLACES = "https://namu-app-backend.herokuapp.com/api/places";
 const API_COORDINATES = "https://namu-app-backend.herokuapp.com/api/coordinates";
-const API_PLACESPHOTOS = "https://namu-app-backend.herokuapp.com/image";
+const API_PLACESPHOTOS = "https://namu-app-backend.herokuapp.com/api/image";
 var places = [];
 var coordinates = [];
-var photos = [];
+var photosPlaces = [];
 
 
 export default function Map() {
@@ -33,19 +33,18 @@ function NoLoaded() {
 const GET_PLACES = () => {
 
     const[array, setArray] = useState([]);
+    
+    const getApi = async () => {
+        const response = await fetch(API_PLACES);
+        const jsonResponse = await response.json();
+        setArray(jsonResponse);
+        return jsonResponse;
+    }
 
     useEffect( () => {
-        
-        const getApi = async () => {
-            const response = await fetch(API_PLACES);
-            const jsonResponse = await response.json();
-            setArray(jsonResponse);
-        }
-        
-        getApi();
-
+            getApi();
     }, []);
-    
+
     return array;
 }
 
@@ -53,40 +52,32 @@ const GET_COORDINATES = () => {
 
     const[array, setArray] = useState([]);
 
-    useEffect( () => {
-        
-        const getApi = async () => {
-            const response = await fetch(API_COORDINATES);
-            const jsonResponse = await response.json();
-            setArray(jsonResponse);
-        }
-        
+    const getApi = async () => {
+        const response = await fetch(API_COORDINATES);
+        const jsonResponse = await response.json();
+        setArray(jsonResponse);
+    }
+
+    useEffect( () => {    
+
         getApi();
 
-    }, []);
+    },[]);
+
     return array;
 }
 
 const GET_PHOTOS = (id) => {
 
-    const[array, setArray] = useState(null);
-
+    
     const getApi = async () => {
-
+        
         const response = await fetch(`${API_PLACESPHOTOS}/${id}`);
-        const imgBlob = await response.blob();
-        const reader = new FileReader();
-        reader.readAsDataURL(imgBlob);
-        reader.onloadend = () => {
-            const base64data = reader.result;
-            setArray(base64data);
-        }
-
+        const jsonResponse = await response.json();
+        photosPlaces = jsonResponse;
     }
     
     getApi();
-
-    return array;
 }
 
 function GoMap() {
@@ -94,8 +85,10 @@ function GoMap() {
     const [selectedPlace, setSelectedPlace] = useState(null);
     const [selectedCoords, setSelectedCoords] = useState(null)
     const [mapInstance, setMapInstance] = useState(null);
+
     places = GET_PLACES();
     coordinates = GET_COORDINATES();
+    
     var placeAtCord = null;
 
     return(
@@ -123,22 +116,23 @@ function GoMap() {
                         lng: Number(placeAtCord.longitude)
                     }}
                     onClick={() => {
-                        setSelectedPlace(place);
+                        placeAtCord = coordinates.find(c => c.id === place.idCoordinate);
                         setSelectedCoords(placeAtCord);
+                        setSelectedPlace(place);
                     }}
                 />
             )))}
             
-            {selectedPlace && (
-                
+            {selectedCoords && selectedPlace &&  (
+                GET_PHOTOS(selectedPlace.id),
                 <InfoWindow 
                     position={{
                         lat: Number(selectedCoords.latitude),
                         lng: Number(selectedCoords.longitude)
                     }}
                     onCloseClick={() => {
-                        setSelectedPlace(null);
                         setSelectedCoords(null);
+                        setSelectedPlace(null);
                     }}
                 >
                     
@@ -154,6 +148,7 @@ function GoMap() {
                             </p>
                         </div>
                         <div className="place__carousel">
+                            <CarouselLoad/>
                         </div>
                     </div>
                 </InfoWindow>
@@ -165,22 +160,24 @@ function GoMap() {
 }
 
 
-const CarouselLoad = (photos) => {
-
+const CarouselLoad = () => {
     const infiniteTrue = true;
     const speed = 700;
     const slidesToScroll = 1;
     const slidesToShow = 3;
-
     return (
+        
         <Slider
         infinite={infiniteTrue}
         speed={speed}
         slidesToShow={slidesToShow}
         slidesToScroll={slidesToScroll}>
-            {Array.from(photos).map(p => (
-                <img src={p.image} />
-            ))}                
+            {
+                Array.from(photosPlaces).map(p => (
+                    <img src={p.image} />
+                ))     
+            }    
         </Slider>
     )
 }
+

@@ -17,7 +17,7 @@ const About = () => {
                             El objetivo de este proyecto es incentivar el turismo nacional e internacional, 
                             mostrando las bellezas turísticas con las que cuenta el territorio nacional, brindando
                             información general de estos lugares y mostrando fotografías de la mano de 
-                            <Link to="/photographers">nuestro equipo fotográfico</Link>.
+                            <Link to="/photographers"> nuestro equipo fotográfico.</Link>
                         </p>    
                     </div>
                     <div className="aboutUs__main_proyectInf">
@@ -50,7 +50,7 @@ const About = () => {
                             <span>
                                 <i className="icon-avatar icon-avatar--manu"></i>
                             </span>
-                            <a href="https://www.linkedin.com/in/manuel-ulate-sancho-481311174/" className="linkedin_a"><i className="fa-brands fa-linkedin"></i></a>
+                            <a href="https://www.linkedin.com/in/manuel-ulate-sancho/" className="linkedin_a"><i className="fa-brands fa-linkedin"></i></a>
                             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, at.</p>
                             <address className="card__addrs">imanuel.ulate@gmail.com</address>
                         </div>

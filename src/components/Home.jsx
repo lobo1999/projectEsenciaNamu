@@ -12,7 +12,7 @@ const Home = () => {
         <h1 className="mainContent__h1">
           Bienvenido a Costa Rica 
         </h1>
-        <p className="">
+        <p>
           Aquí, los visitantes disfrutarán de hermosas playas tropicales, emocionantes aventuras, maravillas de la naturaleza y una interesante cultura, todos los elementos necesarios para vacacionar. ¡Motívese como los miles de personas que han hecho de Costa Rica su mejor opción de viaje! ¡Pura Vida!
         </p>
       </div>

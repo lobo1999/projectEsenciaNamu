@@ -1,6 +1,30 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import ImageGallery from 'react-image-gallery';
 import { Link } from "react-router-dom";
+
+const API_PLACESPHOTOS = "https://namu-app-backend.herokuapp.com/api/image";
+var photos = [];
+
+const GET_PHOTOS = (id) => {
+
+  const[array, setArray] = useState([]);
+
+  const getApi = async () => {
+      
+      const response = await fetch(`${API_PLACESPHOTOS}/${id}`);
+      const buffer = await response.arrayBuffer();
+      const binaryString = Array.from(new Uint8Array(buffer), byte => String.fromCharCode(byte)).join("");
+      const theImage = btoa(binaryString);
+      setArray(theImage);
+  }
+
+  useEffect(() => {
+      getApi();
+  }, []);
+  
+  return array;
+}
 
 const images = [
     {
