@@ -73,7 +73,7 @@ const About = () => {
                                 <i className="icon-avatar icon-avatar--lobo"></i>
                             </span>
                             <a href="https://www.linkedin.com/in/luis-lobo-zamora/" className="linkedin_a"><i className="fa-brands fa-linkedin"></i></a>
-                            <p>Desarrollador de RPA en Equifax</p>
+                            <p>CFO & Co-Founder de Gumalu Inc. Desarrollador de RPA en Equifax</p>
                             <address className="card__addrs">llobozamora@gmail.com</address>
                         </div>
                     </div>
