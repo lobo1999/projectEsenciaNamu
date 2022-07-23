@@ -173,11 +173,46 @@
 
 .mainContent__img {
   background-size: cover;
-	background-position: center center;
   max-height: 18em;
   border-radius: 1em;
 }
 
+.mainContent__vid {
+  background-size: cover;
+	background-position: center center;
+  border-radius: 1em;
+}
+
+.videoContent{
+  position: absolute;
+  border-radius: 1em;
+  bottom: -1em;
+  left: 4em;
+  padding: 0.5rem 0.8rem;
+  transition: 0.3s ease all;
+}
+
+
+.videoContent > span {
+  user-select: none;
+}
+
+.videoContent:hover {
+  background-color: #09411a;
+}
+
+.videoContent:hover > span {
+  color: var(--light);
+}
+
+.videoContent:hover > span > i {
+  color: var(--light);
+}
+
+.disable {
+  display: none;
+  visibility: hidden;
+}
 
 .blur{
   backdrop-filter: blur(10px);
@@ -624,7 +659,6 @@ height: 85vh;
     visibility: hidden;
     display: none;
   }
-
 
   .hamburger {
     display: block;
