@@ -1,53 +1,54 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import ImageGallery from 'react-image-gallery';
 import { Link } from "react-router-dom";
+import Slider from "react-slick";
 
 const API_PLACESPHOTOS = "https://namu-app-backend.herokuapp.com/api/image";
 var photos = [];
+var photosPlaces = [];
 
 const GET_PHOTOS = (id) => {
-
-  const[array, setArray] = useState([]);
-
   const getApi = async () => {
-      
-      const response = await fetch(`${API_PLACESPHOTOS}/${id}`);
-      const buffer = await response.arrayBuffer();
-      const binaryString = Array.from(new Uint8Array(buffer), byte => String.fromCharCode(byte)).join("");
-      const theImage = btoa(binaryString);
-      setArray(theImage);
-  }
+    const response = await fetch(`${API_PLACESPHOTOS}/${id}`);
+    const jsonResponse = await response.json();
+    photosPlaces = jsonResponse;
+  };
 
-  useEffect(() => {
-      getApi();
-  }, []);
-  
-  return array;
-}
+  getApi();
+};
 
-const images = [
-    {
-      original: 'https://media.discordapp.net/attachments/959854421842481157/992209553905164308/2.jpg?width=490&height=613',
-      thumbnail: 'https://media.discordapp.net/attachments/959854421842481157/992209553905164308/2.jpg?width=490&height=613',
-    },
-    {
-      original: 'https://picsum.photos/id/1015/1000/600/',
-      thumbnail: 'https://picsum.photos/id/1015/250/150/',
-    },
-    {
-      original: 'https://picsum.photos/id/1019/1000/600/',
-      thumbnail: 'https://picsum.photos/id/1019/250/150/',
-    },
-  ];
-  
-  class Gallery extends React.Component {
-    render() {
-      
-      return <ImageGallery items={images} />;
+const Gallery = () => {
+  return <CarouselLoad />;
+};
 
-    }
-    
-  }
+const photosCarousel = [
+  "https://res.cloudinary.com/esencianamu-resonanciagaia/image/upload/v1658455578/Catarata%20Nauyaca/6_ghnc9n.jpg",
+  "https://res.cloudinary.com/esencianamu-resonanciagaia/image/upload/v1658455653/San%20Juan%20de%20Chic%C3%BAa/1_puhwhu.jpg",
+  "https://res.cloudinary.com/esencianamu-resonanciagaia/image/upload/v1658455654/San%20Juan%20de%20Chic%C3%BAa/2_mqrfv0.jpg",
+  "https://res.cloudinary.com/esencianamu-resonanciagaia/image/upload/v1658455653/San%20Juan%20de%20Chic%C3%BAa/3_uey3jn.jpg",
+  "https://res.cloudinary.com/esencianamu-resonanciagaia/image/upload/v1658455608/Parque%20E%C3%B3lico%20Santa%20Ana/1_iu5ki1.jpg",
+  "https://res.cloudinary.com/esencianamu-resonanciagaia/image/upload/v1658455608/Parque%20E%C3%B3lico%20Santa%20Ana/3_nkbnif.jpg",
+  "https://res.cloudinary.com/esencianamu-resonanciagaia/image/upload/v1658455661/Volc%C3%A1n%20Arenal/2_t4it3c.jpg",
+  "https://res.cloudinary.com/esencianamu-resonanciagaia/image/upload/v1658455599/Cr%C3%A1ter%20La%20Olla/4_rki6ca.jpg"
+];
 
-  export default Gallery;
+const CarouselLoad = () => {
+  const infiniteTrue = true;
+  const speed = 700;
+  const slidesToScroll = 1;
+  const slidesToShow = 3;
+  return (
+    <Slider
+      infinite={infiniteTrue}
+      speed={speed}
+      slidesToShow={slidesToShow}
+      slidesToScroll={slidesToScroll}
+    >
+      {Array.from(photosCarousel).map((p) => (
+        <img src={p} />
+      ))}
+    </Slider>
+  );
+};
+
+export default Gallery;
